@@ -19,16 +19,17 @@ function App() {
   }
     useEffect(hook, [])
     
-    const showCountry = (id) => {
-        console.log(id)
-        
-        for (const country of countries) {
-            if(country.id === id) {
-                console.log(country)
-                setCountriesToShow(country)
-                console.log(countriesToShow)
+    const showCountry = countryName => {
+        console.log("event key is ", countryName)
+        console.log("ANYTHING!!!")
+        for (let c of countries) {
+            if (c.name === countryName) {
+                console.log("ThE CoUnTRy Matches ", c)
+                setCountry(c)
             }
         }
+        
+
         console.log(countriesToShow)
     }
     
@@ -37,18 +38,21 @@ function App() {
     
   
     const handleFilterChange = (event) => {
+        setCountry([])
         let tempFilter = event.target.value
         tempFilter = '' ? new RegExp('[a-z]') : tempFilter
         console.log("Filter is ", tempFilter)
         setFilter(tempFilter)
         setCountriesToShow(countries.filter(x => x.name.toUpperCase().includes(tempFilter.toUpperCase())))
+
         console.log("filter is ", filter)
         console.log("countries are ", countries )
         console.log("countries to show are ", countriesToShow)
     }
-  
-  
-  
+
+    if (countriesToShow.length === 1 && country.length === 0) {
+        setCountry(countriesToShow[0])
+    }
 
   return (
       <div>
@@ -57,32 +61,35 @@ function App() {
               <label> filter: </label>
               <input value={filter} onChange={handleFilterChange}/>
           </form>
-          <CountryList countries={countriesToShow} showCountry={showCountry}/>
+          <CountryList
+              countries={countriesToShow}
+              showCountry={showCountry}
+              country={country}
+              setCountry={setCountry}/>
       </div>
   );
 }
 
 export default App;
 
-const CountryList = ({countries, showCountry}) => {
+const CountryList = ({countries, showCountry, country, setCountry}) => {
+    console.log("COUNTRY IS ", country)
+    console.log("country length is", country.length)
 
-    if (countries.length > 10) {
+    if (country.length !== 0) {
+        return (
+            <div>
+                <CountryPage country={country}/>
+            </div>
+        )
+    } else if (countries.length > 10) {
         return (
             <p>too many countries to list</p>
         )
     } else if (countries.length > 1) {
         return (
             <div>
-                {countries.map(x => <p key={x.name}>{x.name} <button onClick={showCountry}>show</button> </p> )}
-            </div>
-        )
-    } else if (countries.length === 1){
-
-        console.log("countries length is ", countries.length)
-        console.log("country name is", countries[0].name);
-        return (
-            <div>
-            <CountryPage country = {countries[0]} />
+                {countries.map(x => <ListedCountry key={x.name} name={x.name} showCountryButton={()=>showCountry(x.name)} />)}
             </div>
         )
     } else {
@@ -118,14 +125,11 @@ const CountryPage = ({country}) => {
         
     )
 }
-/*
 
-const CountryButton = (props) => {
-    const handeClick = () => {
-        setFilter(props.country)
-    }
-    
-    return(
-        <button onClick={props.onClick}>hello</button>
+const ListedCountry = (props) => {
+
+    return (
+        <p>{props.name} <button onClick={props.showCountryButton}>show</button> </p>
     )
-}*/
+
+}

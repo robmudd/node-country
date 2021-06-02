@@ -29,13 +29,8 @@ function App() {
         setCountry([])
         let tempFilter = event.target.value
         tempFilter = '' ? new RegExp('[a-z]') : tempFilter
-        console.log("Filter is ", tempFilter)
         setFilter(tempFilter)
         setCountriesToShow(countries.filter(x => x.name.toUpperCase().includes(tempFilter.toUpperCase())))
-        
-        console.log("filter is ", filter)
-        console.log("countries are ", countries)
-        console.log("countries to show are ", countriesToShow)
     }
     
     if (countriesToShow.length === 1 && country.length === 0) {
@@ -52,8 +47,7 @@ function App() {
             <CountryList
                 countries={countriesToShow}
                 showCountry={showCountry}
-                country={country}
-                setCountry={setCountry}/>
+                country={country}/>
         </div>
     );
 }

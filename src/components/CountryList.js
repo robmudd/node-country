@@ -1,17 +1,17 @@
 import CountryPage from "./CountryPage";
 import React from "react";
-import ListedCountry from "./ListedCountry";
 
-const CountryList = ({countries, showCountry, country, setCountry}) => {
-    console.log("COUNTRY IS ", country)
-    console.log("country length is", country.length)
+
+const CountryList = ({countries, showCountry, country}) => {
     
+    //if country has been set...return that country page
     if (country.length !== 0) {
         return (
             <div>
                 <CountryPage country={country}/>
             </div>
         )
+        //otherwise figure out if there should be a list and display it
     } else if (countries.length > 10) {
         return (
             <p>too many countries to list</p>
@@ -19,8 +19,11 @@ const CountryList = ({countries, showCountry, country, setCountry}) => {
     } else if (countries.length > 1) {
         return (
             <div>
-                {countries.map(x => <ListedCountry key={x.name} name={x.name}
-                                                   showCountryButton={() => showCountry(x)}/>)}
+                {countries.map(x =>
+                    <p key={x.name}>
+                        {x.name}
+                        <button onClick={()=>showCountry(x)}>show</button>
+                    </p>)}
             </div>
         )
     } else {
